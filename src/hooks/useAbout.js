@@ -1,13 +1,13 @@
 import instance from "../axios";
 import { useMutation, useQueryClient } from "react-query";
 
-const postComment = ({ cmt, token, _id }) => {
+const postAbout = ({ about, token }) => {
 	return instance
 		.patch(
-			`/post/commentPost/${_id}`,
+			`/user/about`,
 
 			{
-				body: cmt,
+				about: about,
 			},
 
 			{
@@ -20,16 +20,16 @@ const postComment = ({ cmt, token, _id }) => {
 		.then((response) => response.data);
 };
 
-const useComment = (setCmt) => {
+const useAbout = (setIsAboutEdited, setToken, token, setAbout) => {
 	const queryClient = useQueryClient();
 
-	return useMutation("postComment", postComment, {
-		onSuccess: () => {
-			setCmt("");
-			queryClient.invalidateQueries("posts");
-			queryClient.invalidateQueries("getOwnPost");
+	return useMutation("About", postAbout, {
+		onSuccess: (data) => {
+			setAbout(data.data.about);
+			setIsAboutEdited(false);
+			queryClient.invalidateQueries("userDetails");
 		},
 	});
 };
 
-export default useComment;
+export default useAbout;
