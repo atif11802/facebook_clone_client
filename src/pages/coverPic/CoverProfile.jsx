@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./coverPofile.css";
 
 const CoverProfile = ({ data }) => {
@@ -13,7 +14,7 @@ const CoverProfile = ({ data }) => {
 			</div>
 			<div className='profile-img'>
 				<a href='#'>
-					<img src={data?.data?.image.res} alt='profilePicture' title='' />
+					<img src={data?.data?.image?.res} alt='profilePicture' title='' />
 				</a>
 			</div>
 			<div className='profile-name'>
@@ -24,10 +25,10 @@ const CoverProfile = ({ data }) => {
 				<div className='block-menu'>
 					<ul>
 						<li>
-							<a href='#'>about</a>
+							<Link to={`/profile/${data?.data._id}/`}>Post</Link>
 						</li>
 						<li>
-							<a href='#'>Friends</a>
+							<Link to={`/profile/friends/${data?.data._id}`}>Friends</Link>
 						</li>
 						<li>
 							<a href='#'>Photos</a>

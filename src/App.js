@@ -7,6 +7,8 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import PrivateRoute from "./privateRoute";
 import useLocalStorage from "./hooks/useLocalStorage";
 import Profile from "./pages/Profile";
+import Friends from "./pages/Friends";
+import ProfileBody from "./pages/ProfileBody";
 
 const App = () => {
 	return (
@@ -20,14 +22,25 @@ const App = () => {
 						</PrivateRoute>
 					}
 				/>
-				<Route
+				{/* <Route
 					path='/profile/:userId'
 					element={
 						<PrivateRoute>
 							<Profile />
 						</PrivateRoute>
 					}
-				/>
+				/> */}
+				<Route
+					path='/profile/'
+					element={
+						<PrivateRoute>
+							<Profile />
+						</PrivateRoute>
+					}
+				>
+					<Route path=':userId' element={<ProfileBody />} />
+					<Route path='friends/:userId' element={<Friends />} />
+				</Route>
 
 				<Route path='/login' element={<Login />} />
 			</Routes>
