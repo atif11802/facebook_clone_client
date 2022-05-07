@@ -20,7 +20,7 @@ const postAbout = ({ about, token }) => {
 		.then((response) => response.data);
 };
 
-const useAbout = (setIsAboutEdited, setToken, token, setAbout) => {
+const useAbout = (setIsAboutEdited, setAbout) => {
 	const queryClient = useQueryClient();
 
 	return useMutation("About", postAbout, {

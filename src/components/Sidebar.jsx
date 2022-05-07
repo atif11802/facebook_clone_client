@@ -48,7 +48,11 @@ const Sidebar = () => {
 					pl={4}
 				>
 					<WrapItem>
-						<Avatar size='sm' name='Dan Abrahmov' src={token?.user.image.res} />
+						<Avatar
+							size='sm'
+							name='Dan Abrahmov'
+							src={token?.user?.image?.res}
+						/>
 					</WrapItem>
 
 					<Text fontSize='lg' pl={3}>

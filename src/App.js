@@ -31,15 +31,15 @@ const App = () => {
 					}
 				/> */}
 				<Route
-					path='/profile/'
+					path='/profile/:userId'
 					element={
 						<PrivateRoute>
 							<Profile />
 						</PrivateRoute>
 					}
 				>
-					<Route path=':userId' element={<ProfileBody />} />
-					<Route path='friends/:userId' element={<Friends />} />
+					<Route path='' element={<ProfileBody />} />
+					<Route path='friends' element={<Friends />} />
 				</Route>
 
 				<Route path='/login' element={<Login />} />

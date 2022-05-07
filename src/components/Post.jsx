@@ -93,8 +93,8 @@ const Post = ({ post }) => {
 							<AiFillLike size={30} />
 						) : (
 							<AiOutlineLike size={30} />
-						)}
-
+						)}{" "}
+						{likes.length}
 						<Text ml={2} color={"gray.500"}>
 							Like
 						</Text>

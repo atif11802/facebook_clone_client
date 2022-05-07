@@ -120,16 +120,16 @@ const Navbar = () => {
 					justifyContent='space-between'
 				>
 					<Link
-						to={`/profile/${token.user._id}`}
+						to={`/profile/${token.user?._id}`}
 						style={{ textDecoration: "none" }}
 					>
 						<WrapItem display='flex' alignItems='center'>
 							<Avatar
 								size='sm'
-								name={token?.user.name}
-								src={token?.user.image.res}
+								name={token?.user?.name}
+								src={token?.user?.image?.res}
 							/>
-							<Text ml={2}>{token?.user.name}</Text>
+							<Text ml={2}>{token?.user?.name}</Text>
 						</WrapItem>
 					</Link>
 

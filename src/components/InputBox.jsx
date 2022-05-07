@@ -58,7 +58,7 @@ const InputBox = () => {
 			p='6'
 		>
 			<Box display='flex' alignItems='center'>
-				<Avatar size='md' name='Kent Dodds' src={token?.user.image.res} />
+				<Avatar size='md' name='Kent Dodds' src={token?.user?.image?.res} />
 				<Input
 					ml={2}
 					size='md'
@@ -125,7 +125,7 @@ const InputBox = () => {
 									name='Ryan Florence'
 									src='https://bit.ly/ryan-florence'
 								/>
-								<Text ml={2}> {token.user.name}</Text>
+								<Text ml={2}> {token.user?.name}</Text>
 							</Box>
 						</Container>
 						<Textarea

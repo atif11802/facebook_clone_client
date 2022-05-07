@@ -25,8 +25,9 @@ const useLike = () => {
 
 	return useMutation("likepost", likePost, {
 		onMutate: (data) => {
-			queryClient.invalidateQueries("posts");
-			queryClient.invalidateQueries("getOwnPost");
+			// queryClient.invalidateQueries("posts");
+			// queryClient.invalidateQueries("getOwnPost");
+			console.log(data);
 		},
 		onSuccess: () => {},
 	});
