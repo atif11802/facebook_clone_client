@@ -12,6 +12,7 @@ import useLocalStorage from "../../hooks/useLocalStorage";
 const Login = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [name, setName] = useState("");
 	const [token, setToken] = useLocalStorage("token", "");
 
 	const navigate = useNavigate();
@@ -27,6 +28,26 @@ const Login = () => {
 		if (email.length > 0 && password.length > 0) {
 			try {
 				const { data } = await axios.post("/auth/signin", {
+					email,
+					password,
+				});
+				setToken(data);
+			} catch (error) {
+				if (error.response) {
+					// Request made and server responded
+					console.log(error.response.data);
+				}
+			}
+		}
+	};
+
+	const handleSignUp = async (e) => {
+		e.preventDefault();
+
+		if (email.length > 0 && password.length > 0) {
+			try {
+				const { data } = await axios.post("/auth/signup", {
+					name,
 					email,
 					password,
 				});
@@ -90,10 +111,25 @@ const Login = () => {
 						<span>It's free and always will be.</span>
 					</h2>
 					<form>
-						<input type='text' placeholder='Name' />
-						<input type='email' placeholder='email address' />
-						<input type='password' placeholder='Password' />
-						<input type='password' placeholder='Confirm Password' />
+						<input
+							type='text'
+							placeholder='Name'
+							value={name}
+							onChange={(e) => setName(e.target.value)}
+						/>
+						<input
+							type='email'
+							placeholder='email address'
+							value={email}
+							onChange={(e) => setEmail(e.target.value)}
+						/>
+						<input
+							type='password'
+							placeholder='Password'
+							value={password}
+							onChange={(e) => setPassword(e.target.value)}
+						/>
+
 						<Button isLoading colorScheme={"teal"} spinner={<Loader />}>
 							Sign Up
 						</Button>
