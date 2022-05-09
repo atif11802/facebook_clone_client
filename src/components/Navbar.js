@@ -39,6 +39,8 @@ const Navbar = () => {
 	const {
 		user: { _id },
 	} = token;
+
+	console.log(token);
 	const { mutate, isLoading: searchLoading } = useFrndSearch(setUsers);
 
 	const { data, isLoading, isError } = useUserDetails(_id);
@@ -170,10 +172,10 @@ const Navbar = () => {
 						<WrapItem display='flex' alignItems='center'>
 							<Avatar
 								size='sm'
-								name={data.data.name}
-								src={data.data.image.res}
+								name={data?.data?.name}
+								src={data?.data?.image?.res}
 							/>
-							<Text ml={2}>{data.data.name}</Text>
+							<Text ml={2}>{data?.data?.name}</Text>
 						</WrapItem>
 					</Link>
 

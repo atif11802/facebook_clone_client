@@ -13,6 +13,8 @@ const Login = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [name, setName] = useState("");
+	const [semail, setsEmail] = useState("");
+	const [spassword, setsPassword] = useState("");
 	const [token, setToken] = useLocalStorage("token", "");
 
 	const navigate = useNavigate();
@@ -44,12 +46,12 @@ const Login = () => {
 	const handleSignUp = async (e) => {
 		e.preventDefault();
 
-		if (email.length > 0 && password.length > 0) {
+		if (semail.length > 0 && spassword.length && name.length > 0) {
 			try {
 				const { data } = await axios.post("/auth/signup", {
 					name,
-					email,
-					password,
+					email: semail,
+					password: spassword,
 				});
 				setToken(data);
 			} catch (error) {
@@ -120,17 +122,21 @@ const Login = () => {
 						<input
 							type='email'
 							placeholder='email address'
-							value={email}
-							onChange={(e) => setEmail(e.target.value)}
+							value={semail}
+							onChange={(e) => setsEmail(e.target.value)}
 						/>
 						<input
 							type='password'
 							placeholder='Password'
-							value={password}
-							onChange={(e) => setPassword(e.target.value)}
+							value={spassword}
+							onChange={(e) => setsPassword(e.target.value)}
 						/>
 
-						<Button colorScheme={"teal"} spinner={<Loader />}>
+						<Button
+							onClick={handleSignUp}
+							colorScheme={"teal"}
+							spinner={<Loader />}
+						>
 							Sign Up
 						</Button>
 					</form>
