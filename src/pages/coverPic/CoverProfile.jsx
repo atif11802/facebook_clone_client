@@ -1,10 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import useLocalStorage from "../../hooks/useLocalStorage";
 import useUserDetails from "../../hooks/useUserDetails";
 import "./coverPofile.css";
 
 const CoverProfile = ({ userId }) => {
 	const { data, isLoading, isError } = useUserDetails(userId);
+	const [token, setToken] = useLocalStorage("token", "");
 
 	if (isLoading) {
 		return <div>Loading...</div>;
@@ -42,12 +44,13 @@ const CoverProfile = ({ userId }) => {
 							<li>
 								<Link to={`/profile/${data?.data._id}/friends`}>Friends</Link>
 							</li>
-							{/* <li>
-							<a href='#'>Photos</a>
-						</li>
-						<li>
-							<a href='#'>More...</a>
-						</li> */}
+							{token?.user._id === data?.data._id && (
+								<li>
+									<Link to={`/profile/${data?.data._id}/requestReceived`}>
+										Friend Request Received
+									</Link>
+								</li>
+							)}
 						</ul>
 					</div>
 				</div>

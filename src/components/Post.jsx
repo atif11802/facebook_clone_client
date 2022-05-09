@@ -25,7 +25,7 @@ import Allcomments from "./Allcomments";
 const Post = ({ post }) => {
 	const { body, images, updatedAt, postedBy, _id, likes, comments } = post;
 	const [token, setToken] = useLocalStorage("token", "");
-	const [isLiked, setIsLiked] = useState();
+	const [isLiked, setIsLiked] = useState(post);
 
 	const { mutate } = useLike();
 	const handleLike = () => {

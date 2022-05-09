@@ -16,6 +16,7 @@ import useGetOwnPost from "../hooks/useGetOwnPost";
 import useLocalStorage from "../hooks/useLocalStorage";
 import useUserDetails from "../hooks/useUserDetails";
 import EditProfile from "../components/EditProfile";
+import useSendFriendReq from "../hooks/useSendFriendReq";
 
 const ProfileBody = () => {
 	const { userId } = useParams();
@@ -32,13 +33,29 @@ const ProfileBody = () => {
 
 	const { mutate } = useAbout(setIsAboutEdited, setAbout);
 
-	// console.log(token.user._id, userdata?.data?._id);
-
 	const handleAbout = () => {
 		if (about !== "") {
 			mutate({ about, token });
 		}
 	};
+
+	const { mutate: reqMutate } = useSendFriendReq();
+
+	const handleSendFriendReq = () => {
+		reqMutate({ userId, token });
+	};
+
+	const isFriendreqRec = userdata?.data?.friendReqReceived?.find(
+		(x) => x._id === token.user._id
+	);
+
+	const isFriendreqSent = userdata?.data?.friendReqSent?.find(
+		(x) => x._id === token.user._id
+	);
+
+	const isFriend = userdata?.data?.friends?.find(
+		(x) => x._id === token.user._id
+	);
 
 	return (
 		<Container maxW='5xl' color='#262626' mt='3' display='flex'>
@@ -49,6 +66,33 @@ const ProfileBody = () => {
 				height={["100%", "100%", "100%", "100%", "100%"]}
 				borderRadius='10px'
 			>
+				{token.user._id !== userdata?.data?._id &&
+					!isFriendreqRec &&
+					!isFriendreqSent &&
+					!isFriend && (
+						<Box p='4'>
+							<Text fontSize='xl'>
+								Send Friend Request to {userdata?.data?.name}
+							</Text>
+							<Button
+								onClick={handleSendFriendReq}
+								colorScheme='green'
+								size='lg'
+								width='100%'
+								mt='3'
+							>
+								<Text fontSize='xl'>Send</Text>
+							</Button>
+						</Box>
+					)}
+
+				{isFriendreqRec && (
+					<Box p='4'>
+						<Text fontSize='xl'>
+							you sent a friend request to {userdata?.data?.name}
+						</Text>
+					</Box>
+				)}
 				{token.user._id === userdata?.data?._id && (
 					<Box p='4'>
 						<Text fontSize='xl'>Edit Profile</Text>
@@ -63,7 +107,7 @@ const ProfileBody = () => {
 							{userdata?.data?.about}
 						</Text>
 					)}
-					{token.user._id === userdata?.data?._id && (
+					{!isAboutEdited && token.user._id === userdata?.data?._id && (
 						<>
 							{/* <Text pt='3' fontSize='md' align='center'>
 								{userdata?.data?.about}

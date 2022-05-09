@@ -9,6 +9,7 @@ import useLocalStorage from "./hooks/useLocalStorage";
 import Profile from "./pages/Profile";
 import Friends from "./pages/Friends";
 import ProfileBody from "./pages/ProfileBody";
+import FriendReqReceived from "./components/FriendReqReceived";
 
 const App = () => {
 	return (
@@ -40,6 +41,7 @@ const App = () => {
 				>
 					<Route path='' element={<ProfileBody />} />
 					<Route path='friends' element={<Friends />} />
+					<Route path='requestReceived' element={<FriendReqReceived />} />
 				</Route>
 
 				<Route path='/login' element={<Login />} />
