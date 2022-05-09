@@ -130,7 +130,7 @@ const Login = () => {
 							onChange={(e) => setPassword(e.target.value)}
 						/>
 
-						<Button isLoading colorScheme={"teal"} spinner={<Loader />}>
+						<Button colorScheme={"teal"} spinner={<Loader />}>
 							Sign Up
 						</Button>
 					</form>
