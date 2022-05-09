@@ -18,10 +18,15 @@ import { AiOutlineCaretDown } from "react-icons/ai";
 import { TiArrowSortedUp } from "react-icons/ti";
 import { HiSpeakerphone } from "react-icons/hi";
 import useLocalStorage from "../hooks/useLocalStorage";
+import useUserDetails from "../hooks/useUserDetails";
 
 const Sidebar = () => {
 	const [seeMore, setSeeMore] = useState(false);
 	const [token, setToken] = useLocalStorage("token", "");
+	const {
+		user: { _id },
+	} = token;
+	const { data, isLoading, isError } = useUserDetails(_id);
 
 	return (
 		<Box mt='2' flex='3'>
@@ -51,7 +56,7 @@ const Sidebar = () => {
 						<Avatar
 							size='sm'
 							name='Dan Abrahmov'
-							src={token?.user?.image?.res}
+							src={data?.data?.image?.res}
 						/>
 					</WrapItem>
 
