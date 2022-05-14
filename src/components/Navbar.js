@@ -40,7 +40,6 @@ const Navbar = () => {
 		user: { _id },
 	} = token;
 
-	console.log(token);
 	const { mutate, isLoading: searchLoading } = useFrndSearch(setUsers);
 
 	const { data, isLoading, isError } = useUserDetails(_id);
