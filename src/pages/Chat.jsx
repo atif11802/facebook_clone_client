@@ -62,7 +62,9 @@ const Chat = () => {
 							<Text fontSize='md'>{friend.name.toUpperCase()}</Text>
 						</Box>
 					</Box>
-					{show && <ChatBox friend={friend} user={token.user._id} />}
+					{show && (
+						<ChatBox friend={friend} user={token.user._id} setShow={setShow} />
+					)}
 				</>
 			))}
 		</Box>
