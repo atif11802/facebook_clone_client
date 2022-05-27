@@ -31,8 +31,8 @@ const MainPage = () => {
 			<Container>
 				<InputBox />
 				{isLoading && <Loader />}
-				{data?.data.map((post) => (
-					<div key={post._id}>
+				{data?.data.map((post, i) => (
+					<div key={i}>
 						<Post post={post} />
 					</div>
 				))}

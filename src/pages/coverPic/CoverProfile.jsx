@@ -11,6 +11,7 @@ const CoverProfile = ({ userId }) => {
 	if (isLoading) {
 		return <div>Loading...</div>;
 	}
+	console.log("data", data);
 
 	return (
 		<>
@@ -39,7 +40,7 @@ const CoverProfile = ({ userId }) => {
 					<div className='block-menu'>
 						<ul>
 							<li>
-								<Link to={`/profile/${data?.data._id}/`}>Post</Link>
+								<Link to={`/profile/${data?.data?._id}/`}>Post</Link>
 							</li>
 							<li>
 								<Link to={`/profile/${data?.data._id}/friends`}>Friends</Link>

@@ -224,8 +224,8 @@ const Navbar = () => {
 													<Box>
 														<Avatar
 															size='sm'
-															name={user.name}
-															src={user.image.res}
+															name={user?.name}
+															src={user?.image?.res}
 														/>
 													</Box>
 													<Box ml='3'>

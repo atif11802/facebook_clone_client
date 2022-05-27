@@ -1,71 +1,144 @@
-import React from "react";
+import React, { useState } from "react";
 import "./chatbox.css";
-import { Avatar, Text } from "@chakra-ui/react";
+import { Avatar, Input, Text } from "@chakra-ui/react";
+import useMakeChat from "../../hooks/useMakeChat";
+import useSendChat from "../../hooks/useSendChat";
+import useLocalStorage from "../../hooks/useLocalStorage";
+import useGetMessages from "../../hooks/useGetMessages";
+import ScrollToBottom from "react-scroll-to-bottom";
 
-const ChatBox = ({ user, friend, setShow }) => {
-	console.log(user, friend);
+const ChatBox = ({ user, friend, setShow, chatData }) => {
+	const [message, setMessage] = useState("");
+	const [token, setToken] = useLocalStorage("token", "");
+
+	// console.log("chatdata", chatData?.data);
+	const { data, isError, isLoading } = useGetMessages(
+		chatData?.data?._id,
+		token,
+		setMessage
+	);
+	// console.log(chatData?.data?._id);
+
+	const { mutate } = useSendChat(setMessage);
+
+	const sendMessage = (e) => {
+		e.preventDefault();
+
+		mutate({
+			token,
+			chat: chatData?.data._id,
+			message,
+		});
+	};
+
 	return (
 		<div className='chatbox'>
 			<div className='chatbox-header'>
 				<div className='chatbox-header-left'>
 					<img
-						src={friend.image.res}
-						alt={friend.name}
+						src={friend?.image?.res}
+						alt={friend?.name}
 						className='chatbox-header-left-img'
 					/>
 					<h3>{friend.name}</h3>
 				</div>
 				<div className='chatbox-header-right'>
-					<div className='chatbox-header-right-top'></div>
+					<div
+						className='chatbox-header-right-top'
+						onClick={() => setShow(false)}
+					>
+						<h1>X</h1>
+					</div>
 				</div>
 			</div>
-			<div className='chatbox-body'>
-				<div className='chatbox-body-left'>
-					<div className='chatbox-body-left-top'>
-						<div className='chatbox-body-left-top-img'>
-							<Avatar
-								size='sm'
-								name='Kent Dodds'
-								src='https://bit.ly/kent-c-dodds'
-							/>{" "}
-						</div>
-						<div className='chatbox-body-left-top-text'>
-							<Text
-								borderRadius='lg'
-								p='5'
-								fontSize='lg'
-								width='50%'
-								backgroundColor='#B2F5EA'
-							>
-								(lg) In
-								ldddddddddddddddddddddddddddddocccccccccxxxcccccccccccccccccccve
-								with React & Next
-							</Text>
-						</div>
-					</div>
+			<ScrollToBottom
+				style={{
+					height: "200px !important",
+					overflowY: "scroll",
+					overflowX: "hidden",
+				}}
+			>
+				<div className='chatbox-body'>
+					{data?.map((message, i) => (
+						<>
+							{message.sender._id !== user && (
+								<div
+									className='chatbox-body-left'
+									style={{
+										marginTop: "20px",
+										width: "90%",
+									}}
+								>
+									<div className='chatbox-body-left-top'>
+										<div className='chatbox-body-left-top-img'>
+											<Avatar
+												size='sm'
+												name='Kent Dodds'
+												src={
+													message.sender?.image?.res
+														? message.sender.image.res
+														: "https://bit.ly/kent-c-dodds"
+												}
+											/>{" "}
+										</div>
+										<div className='chatbox-body-left-top-text'>
+											<Text
+												borderRadius='lg'
+												p='5'
+												fontSize='lg'
+												width='70%'
+												backgroundColor='#B2F5EA'
+											>
+												{message.message}
+											</Text>
+										</div>
+									</div>
+								</div>
+							)}
+							{message.sender._id === user && (
+								<div
+									className='chatbox-body-right'
+									style={{
+										marginTop: "20px",
+									}}
+								>
+									<div className='chatbox-body-right-top-text'>
+										{message.sender._id === user && (
+											<Text
+												borderRadius='lg'
+												p='5'
+												fontSize='lg'
+												width='80%'
+												backgroundColor='#B2F5EA'
+											>
+												{message.message}
+											</Text>
+										)}
+									</div>
+									<div className='chatbox-body-right-top-img'>
+										<Avatar
+											size='sm'
+											name='Kent Dodds'
+											src={
+												message.sender?.image?.res
+													? message.sender.image.res
+													: "https://bit.ly/kent-c-dodds"
+											}
+										/>{" "}
+									</div>
+								</div>
+							)}
+						</>
+					))}
 				</div>
-				<div className='chatbox-body-right'>
-					<div className='chatbox-body-right-top-text'>
-						<Text
-							fontSize='lg'
-							width='90%'
-							backgroundColor='#319795'
-							p='5'
-							borderRadius='lg'
-						>
-							(lg) In love wixxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxth React
-							&
-							Nextaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-						</Text>
-					</div>
-					<div className='chatbox-body-right-top-img'>
-						<Avatar
-							size='sm'
-							name='Kent Dodds'
-							src='https://bit.ly/kent-c-dodds'
-						/>{" "}
-					</div>
-				</div>
+			</ScrollToBottom>
+			<div className='chatbox-footer'>
+				<Input
+					placeholder='Basic usage'
+					value={message}
+					onChange={(e) => setMessage(e.target.value)}
+					onKeyUp={(e) => (e.key === "Enter" ? sendMessage(e) : null)}
+				/>
 			</div>
 		</div>
 	);

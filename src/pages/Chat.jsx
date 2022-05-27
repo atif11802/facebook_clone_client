@@ -5,27 +5,29 @@ import useLocalStorage from "../hooks/useLocalStorage";
 import useUserDetails from "../hooks/useUserDetails";
 import { useSelector, useDispatch } from "react-redux";
 import { showChat } from "../actions/index";
+import useMakeChat from "../hooks/useMakeChat";
 
 const Chat = () => {
 	const [token, setToken] = useLocalStorage("token", "");
 	const { data, isLoading, isError } = useUserDetails(token.user._id);
 	const [show, setShow] = useState(false);
+	const [friend, setFriend] = useState(null);
 
 	const dispatch = useDispatch();
 
-	const chatData = useSelector((state) => state);
-	// console.log(chatData);
+	const { mutate, data: makechatData } = useMakeChat();
 
 	const handleMakeChat = (user) => {
 		setShow(true);
 
-		// dispatch(
-		// 	showChat({
-		// 		setShow: show,
-		// 		friend: user,
-		// 		user: token.user._id,
-		// 	})
-		// );
+		setFriend(user);
+		// console.log(user._id);
+
+		mutate({
+			token,
+			participants: [user._id, token.user._id],
+			isGroup: false,
+		});
 	};
 
 	return (
@@ -40,7 +42,7 @@ const Chat = () => {
 						mt={2}
 						display='flex'
 						alignItems='center'
-						onClick={() => handleMakeChat(friend._id)}
+						onClick={() => handleMakeChat(friend)}
 						_hover={{
 							cursor: "pointer",
 						}}
@@ -62,11 +64,16 @@ const Chat = () => {
 							<Text fontSize='md'>{friend.name.toUpperCase()}</Text>
 						</Box>
 					</Box>
-					{show && (
-						<ChatBox friend={friend} user={token.user._id} setShow={setShow} />
-					)}
 				</>
 			))}
+			{show && (
+				<ChatBox
+					friend={friend}
+					user={token.user._id}
+					setShow={setShow}
+					chatData={makechatData}
+				/>
+			)}
 		</Box>
 	);
 };

@@ -3,11 +3,13 @@ import React from "react";
 import { useQuery } from "react-query";
 
 const fetchPosts = ({ token, friendsId }) => {
+	let friendsIds = friendsId?.length ? friendsId : [];
+
 	return axios
 		.post(
 			"/post/getAllPost",
 			{
-				friendsId,
+				friendsId: friendsIds,
 			},
 			{
 				headers: {
@@ -15,13 +17,15 @@ const fetchPosts = ({ token, friendsId }) => {
 				},
 			}
 		)
-		.then((res) => res.data);
+		.then((res) => {
+			return res.data;
+		});
 };
 
 const usePosts = ({ token, friendsId }) => {
 	// return useQuery("posts", fetchPosts(token));
 	return useQuery("posts", () => fetchPosts({ token, friendsId }), {
-		enabled: friendsId?.length > 0,
+		// enabled: friendsId?.length > 0,
 	});
 };
 
