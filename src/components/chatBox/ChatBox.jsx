@@ -5,6 +5,7 @@ import useMakeChat from "../../hooks/useMakeChat";
 import useSendChat from "../../hooks/useSendChat";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import useGetMessages from "../../hooks/useGetMessages";
+import useUserDetails from "../../hooks/useUserDetails";
 import ScrollToBottom from "react-scroll-to-bottom";
 import ScrollableFeed from "react-scrollable-feed";
 import io from "socket.io-client";
@@ -16,6 +17,8 @@ const ChatBox = ({ user, friend, setShow, chatData }) => {
 	const [token, setToken] = useLocalStorage("token", "");
 	const [messages, setMessages] = useState([]);
 
+	const { data: userData } = useUserDetails(user);
+
 	// console.log("chatdata", chatData?.data);
 	const { data, isError, isLoading } = useGetMessages(
 		chatData?.data?._id,
@@ -25,16 +28,6 @@ const ChatBox = ({ user, friend, setShow, chatData }) => {
 	// console.log(chatData?.data?._id);
 	let ENDPOINT = "localhost:9000";
 	const { mutate } = useSendChat(setMessage);
-
-	const sendMessage = (e) => {
-		e.preventDefault();
-
-		mutate({
-			token,
-			chat: chatData?.data._id,
-			message,
-		});
-	};
 
 	useEffect(() => {
 		socket = io(ENDPOINT);
@@ -52,8 +45,8 @@ const ChatBox = ({ user, friend, setShow, chatData }) => {
 				}
 			);
 		}
-		socket.on("message", (message) => {
-			setMessages((messages) => [...messages, message]);
+		socket.on("msg", (message) => {
+			setMessages((messages) => [...messages, { ...message }]);
 		});
 
 		return () => {
@@ -61,11 +54,28 @@ const ChatBox = ({ user, friend, setShow, chatData }) => {
 		};
 	}, [chatData?.data?._id, friend._id, ENDPOINT]);
 
+	// console.log(messages, data);
 	useEffect(() => {
 		if (data?.length > 0) {
 			setMessages(data);
 		}
 	}, [data]);
+
+	const sendMessage = (e) => {
+		e.preventDefault();
+
+		mutate({
+			token,
+			chat: chatData?.data._id,
+			message,
+		});
+
+		socket.emit("sendMessage", {
+			message,
+			sender: userData.data,
+		});
+	};
+	console.log(messages);
 
 	return (
 		<div className='chatbox'>
@@ -90,9 +100,9 @@ const ChatBox = ({ user, friend, setShow, chatData }) => {
 
 			<div className='chatbox-body'>
 				<ScrollableFeed>
-					{data?.map((message, i) => (
+					{messages?.map((message, i) => (
 						<>
-							{message.sender._id !== user && (
+							{message.sender?._id !== user && (
 								<div
 									className='chatbox-body-left'
 									style={{
