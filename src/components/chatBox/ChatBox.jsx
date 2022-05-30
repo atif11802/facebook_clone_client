@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./chatbox.css";
 import { Avatar, Input, Text } from "@chakra-ui/react";
 import useMakeChat from "../../hooks/useMakeChat";
@@ -6,19 +6,24 @@ import useSendChat from "../../hooks/useSendChat";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import useGetMessages from "../../hooks/useGetMessages";
 import ScrollToBottom from "react-scroll-to-bottom";
+import ScrollableFeed from "react-scrollable-feed";
+import io from "socket.io-client";
+
+let socket;
 
 const ChatBox = ({ user, friend, setShow, chatData }) => {
 	const [message, setMessage] = useState("");
 	const [token, setToken] = useLocalStorage("token", "");
+	const [messages, setMessages] = useState([]);
 
 	// console.log("chatdata", chatData?.data);
 	const { data, isError, isLoading } = useGetMessages(
 		chatData?.data?._id,
-		token,
-		setMessage
+		token
 	);
-	// console.log(chatData?.data?._id);
 
+	// console.log(chatData?.data?._id);
+	let ENDPOINT = "localhost:9000";
 	const { mutate } = useSendChat(setMessage);
 
 	const sendMessage = (e) => {
@@ -30,6 +35,37 @@ const ChatBox = ({ user, friend, setShow, chatData }) => {
 			message,
 		});
 	};
+
+	useEffect(() => {
+		socket = io(ENDPOINT);
+		if (chatData?.data?._id) {
+			socket.emit(
+				"join",
+				{
+					room: chatData?.data?._id,
+					userId: user,
+				},
+				(error) => {
+					if (error) {
+						alert(error);
+					}
+				}
+			);
+		}
+		socket.on("message", (message) => {
+			setMessages((messages) => [...messages, message]);
+		});
+
+		return () => {
+			socket.disconnect();
+		};
+	}, [chatData?.data?._id, friend._id, ENDPOINT]);
+
+	useEffect(() => {
+		if (data?.length > 0) {
+			setMessages(data);
+		}
+	}, [data]);
 
 	return (
 		<div className='chatbox'>
@@ -51,14 +87,9 @@ const ChatBox = ({ user, friend, setShow, chatData }) => {
 					</div>
 				</div>
 			</div>
-			<ScrollToBottom
-				style={{
-					height: "200px !important",
-					overflowY: "scroll",
-					overflowX: "hidden",
-				}}
-			>
-				<div className='chatbox-body'>
+
+			<div className='chatbox-body'>
+				<ScrollableFeed>
 					{data?.map((message, i) => (
 						<>
 							{message.sender._id !== user && (
@@ -68,6 +99,7 @@ const ChatBox = ({ user, friend, setShow, chatData }) => {
 										marginTop: "20px",
 										width: "90%",
 									}}
+									key={i}
 								>
 									<div className='chatbox-body-left-top'>
 										<div className='chatbox-body-left-top-img'>
@@ -130,8 +162,9 @@ const ChatBox = ({ user, friend, setShow, chatData }) => {
 							)}
 						</>
 					))}
-				</div>
-			</ScrollToBottom>
+				</ScrollableFeed>
+			</div>
+
 			<div className='chatbox-footer'>
 				<Input
 					placeholder='Basic usage'
