@@ -26,7 +26,8 @@ const ChatBox = ({ user, friend, setShow, chatData }) => {
 	);
 
 	// console.log(chatData?.data?._id);
-	let ENDPOINT = "localhost:9000";
+	// let ENDPOINT = "localhost:9000";
+	let ENDPOINT = "https://facbookclonebackend.herokuapp.com";
 	const { mutate } = useSendChat(setMessage);
 
 	useEffect(() => {
@@ -46,7 +47,7 @@ const ChatBox = ({ user, friend, setShow, chatData }) => {
 				}
 			);
 		}
-		console.log(socket.on);
+
 		socket.on("msg", (message) => {
 			console.log(message);
 			setMessages((messages) => [...messages, { ...message }]);
