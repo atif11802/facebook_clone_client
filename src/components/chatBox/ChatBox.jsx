@@ -26,44 +26,9 @@ const ChatBox = ({ user, friend, setShow, chatData }) => {
 	);
 
 	// console.log(chatData?.data?._id);
-	// let ENDPOINT = "localhost:9000";
-	let ENDPOINT = "https://facbookclonebackend.herokuapp.com";
+	let ENDPOINT = "localhost:9000";
+	// let ENDPOINT = "https://facbookclonebackend.herokuapp.com";
 	const { mutate } = useSendChat(setMessage);
-
-	useEffect(() => {
-		socket = io(ENDPOINT);
-		// console.log(chatData?.data?._id);
-		if (chatData?.data?._id) {
-			socket.emit(
-				"join",
-				{
-					room: chatData?.data?._id,
-					userId: user,
-				},
-				(error) => {
-					if (error) {
-						alert(error);
-					}
-				}
-			);
-		}
-
-		socket.on("msg", (message) => {
-			console.log(message);
-			setMessages((messages) => [...messages, { ...message }]);
-		});
-
-		return () => {
-			socket.disconnect();
-		};
-	}, [chatData?.data?._id, friend._id, ENDPOINT]);
-
-	// console.log(messages, data);
-	useEffect(() => {
-		if (data?.length > 0) {
-			setMessages(data);
-		}
-	}, [data]);
 
 	const sendMessage = (e) => {
 		e.preventDefault();
@@ -83,6 +48,47 @@ const ChatBox = ({ user, friend, setShow, chatData }) => {
 			sender: userData.data,
 		});
 	};
+
+	useEffect(() => {
+		socket = io(ENDPOINT);
+		// console.log("socket", socket);
+		console.log(chatData?.data?._id);
+		if (chatData?.data?._id) {
+			socket.emit(
+				"join",
+				{
+					room: chatData?.data?._id,
+					userId: user,
+				},
+				(error) => {
+					if (error) {
+						alert(error);
+					}
+				}
+			);
+		}
+
+		// socket.on("roomData", ({ users }) => {
+		// 	console.log(users);
+		// });
+
+		return () => {
+			socket.disconnect();
+			socket.off();
+		};
+	}, [chatData?.data?._id, friend._id, ENDPOINT]);
+
+	// console.log(messages, data);
+	useEffect(() => {
+		if (data?.length > 0) {
+			setMessages(data);
+		}
+		socket.on("msg", (message) => {
+			console.log(message);
+			setMessages((messages) => [...messages, { ...message }]);
+		});
+	}, [data]);
+
 	// console.log(messages);
 
 	return (
