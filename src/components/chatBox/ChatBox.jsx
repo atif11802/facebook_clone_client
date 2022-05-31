@@ -26,11 +26,12 @@ const ChatBox = ({ user, friend, setShow, chatData }) => {
 	);
 
 	// console.log(chatData?.data?._id);
-	let ENDPOINT = "https://facbookclonebackend.herokuapp.com/";
+	let ENDPOINT = "localhost:9000";
 	const { mutate } = useSendChat(setMessage);
 
 	useEffect(() => {
 		socket = io(ENDPOINT);
+		// console.log(chatData?.data?._id);
 		if (chatData?.data?._id) {
 			socket.emit(
 				"join",
@@ -45,7 +46,9 @@ const ChatBox = ({ user, friend, setShow, chatData }) => {
 				}
 			);
 		}
+		console.log(socket.on);
 		socket.on("msg", (message) => {
+			console.log(message);
 			setMessages((messages) => [...messages, { ...message }]);
 		});
 
@@ -79,7 +82,7 @@ const ChatBox = ({ user, friend, setShow, chatData }) => {
 			sender: userData.data,
 		});
 	};
-	console.log(messages);
+	// console.log(messages);
 
 	return (
 		<div className='chatbox'>
