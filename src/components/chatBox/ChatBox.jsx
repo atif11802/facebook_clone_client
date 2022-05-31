@@ -72,6 +72,11 @@ const ChatBox = ({ user, friend, setShow, chatData }) => {
 		// 	console.log(users);
 		// });
 
+		socket.on("msg", (message) => {
+			console.log(message);
+			setMessages((messages) => [...messages, { ...message }]);
+		});
+
 		return () => {
 			socket.disconnect();
 			socket.off();
@@ -83,10 +88,6 @@ const ChatBox = ({ user, friend, setShow, chatData }) => {
 		if (data?.length > 0) {
 			setMessages(data);
 		}
-		socket.on("msg", (message) => {
-			console.log(message);
-			setMessages((messages) => [...messages, { ...message }]);
-		});
 	}, [data]);
 
 	// console.log(messages);
