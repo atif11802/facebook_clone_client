@@ -27,7 +27,7 @@ const ChatBox = ({ user, friend, setShow, chatData }) => {
 
 	// console.log(chatData?.data?._id);
 	// let ENDPOINT = "localhost:9000";
-	let ENDPOINT = "https://facbookclonebackend.herokuapp.com";
+	let ENDPOINT = "https://fakebookserver.onrender.com/";
 	const { mutate } = useSendChat(setMessage);
 
 	const sendMessage = (e) => {

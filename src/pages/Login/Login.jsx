@@ -36,6 +36,7 @@ const Login = () => {
 				setToken(data);
 			} catch (error) {
 				if (error.response) {
+					console.log(error);
 					// Request made and server responded
 					console.log(error.response.data);
 				}
